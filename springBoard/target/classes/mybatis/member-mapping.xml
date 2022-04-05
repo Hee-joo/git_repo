@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.memberMapper">
+	<select id="login" parameterType="java.util.Map" resultType="String">
+		select name from member where id=#{id} and pwd=#{pwd}
+	</select>
+	
+	<select id="isExistId" parameterType="String" resultType="memberDTO">
+		select * from member where id=#{id}
+	</select>
+	
+	<select id="getMember" parameterType="String" resultType="memberDTO">
+		select * from member where id=#{id}
+	</select>
+	
+	<select id="selectList" parameterType="java.util.Map" resultType="memberDTO">
+		<![CDATA[SELECT * from
+		(SELECT ROWNUM rn, tt.* FROM
+		(SELECT * FROM MEMBER ORDER BY name asc, id asc) tt)
+		WHERE rn>=#{startNum} AND rn<=#{endNum}]]>
+	</select>
+	
+	<select id="getTotalMember" resultType="int">
+		select count(*) as cnt from member
+	</select>
+	
+	<insert id="write" parameterType="memberDTO">
+		insert into member values
+		(#{name}, #{id}, #{pwd}, #{gender}, #{email1},
+		#{email2}, #{tel1}, #{tel2}, #{tel3}, #{addr}, sysdate)
+	</insert>
+	
+	<update id="modify" parameterType="memberDTO">
+		update member 
+		set pwd=#{pwd}, email1=#{email1}, email2=#{email2},
+		tel1=#{tel1}, tel2=#{tel2}, tel3=#{tel3}, addr=#{addr} 
+		where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		delete member where id=#{id}
+	</delete>
+</mapper>
